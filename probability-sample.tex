@@ -12,7 +12,7 @@
 % This document provides examples and motivations for the macros defined in the 
 % probability.sty package
 
-\documentclass[11pt,a4paper]{ltxguide}
+\documentclass[11pt,letterpaper]{ltxguide}
 
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
@@ -20,7 +20,7 @@
 \usepackage{mathtools}
 \usepackage{hyperref}
 \usepackage[double]{probability}
-
+\usepackage{mccorviemath}
 
 \begin{document}
 
@@ -33,7 +33,7 @@ What style looks best for the probability symbol?
 The following table summarize the styles from a few popular textbooks.
 
 
-\begin{tabular}{l p{1.5cm} p{1.5cm} p{1.5cm} l }
+\begin{tabular}{l p{1.7cm} p{1.5cm} p{1.5cm} l }
 Source & Probability Symbol & Font Style &  Brace type & Title\\
 \hline
 Williams & P & mathbb & paren & Probability and Martingales\\
@@ -56,7 +56,7 @@ What style looks best for expectation?
 
 What follows is a similar summary for expectation.  The final column indicates whether the name of the variance operator is capitalized.
 
-\begin{tabular}{l p{1.5cm} p{1.5cm} p{1.7cm} p{1.5cm} }
+\begin{tabular}{l p{2cm} p{1.5cm} p{2cm} p{1.5cm} }
 Source & Expectation Symbol&  Font Style & Brace type & Var \\
 \hline
 Williams & E & mathbb &  paren & cap\\
@@ -147,7 +147,7 @@ The package provides symbols for standard distributions using san-sarif fonts.  
 \end{split}
 \]
 
-The rest of the definitions are generally used in mathematics, and are not specific to probability.  They are my commonly used macros, but maybe they do not properly belong to a probability package.
+The rest of the definitions are generally used in mathematics, and are not specific to probability.  As such they are defined in the \texttt{mccorviemath} package, but they are demonstrated here.
 
 First we define the standard sets.  The binary set is $\binary$.  Natural numbers are $\NN$.  The integers are $\ZZ$.  The rational numbers are $\QQ$.  The real numbers are $\RR$.  The complex numbers are $\CC$.
 
