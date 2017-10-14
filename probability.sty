@@ -1,0 +1,291 @@
+ %% Copyright 2017 Ryan McCorvie
+  %
+  % This work may be distributed and/or modified under the
+  % conditions of the LaTeX Project Public License, either version 1.3
+  % of this license or (at your option) any later version.
+  % The latest version of this license is in
+  %   http://www.latex-project.org/lppl.txt
+  % and version 1.3 or later is part of all distributions of LaTeX
+  % version 2005/12/01 or later.
+  % 
+  % The Current Maintainer of this work is Ryan McCorvie
+  %
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{probability}
+  [2017/10/01 v0.1 Probability LaTeX package for writing mathematics related to probability research]
+\ClassInfo{probability}{Copyright (c) 2017 Ryan McCorvie}
+
+
+\def\hi{Mathematical probability notation package}
+%\let\myDate\date
+
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{mathtools}
+\RequirePackage{euscript}
+\RequirePackage{dsfont}
+\RequirePackage{bm}
+
+\newif\ifcapitalizevar
+
+\providecommand\Prsymbol{}
+\providecommand\Prformat{}
+\providecommand\Prlparen{}
+\providecommand\Prrparen{}
+
+\providecommand\Exsymbol{}
+\providecommand\Exformat{}
+\providecommand\Exlparen{}
+\providecommand\Exrparen{}
+
+% Some common style combinations
+
+% plain style is used in Durrett and Kallenberg
+\DeclareOption{plain}{
+	\renewcommand{\Prsymbol}{P}
+	\renewcommand{\Prformat}[1]{{#1}}
+	\renewcommand{\Prlparen}{(}
+	\renewcommand{\Prrparen}{)}
+
+	\renewcommand{\Exsymbol}{E}
+	\renewcommand{\Exformat}[1]{{#1}}
+	\renewcommand{\Exlparen}{[}
+	\renewcommand{\Exrparen}{]}
+
+	\capitalizevarfalse
+}
+
+% double script, kind of like Williams or Tao
+\DeclareOption{double}{
+	\renewcommand{\Prsymbol}{P}
+	\renewcommand{\Prformat}[1]{\ensuremath{\operatorname{\mathds{ #1}}}}
+	\renewcommand{\Prlparen}{(}
+	\renewcommand{\Prrparen}{)}
+
+	\renewcommand{\Exsymbol}{E}
+	\renewcommand{\Exformat}[1]{\ensuremath{\operatorname{ \mathds{#1}}}}
+	\renewcommand{\Exlparen}{(}
+	\renewcommand{\Exrparen}{)}
+
+	\capitalizevartrue
+}
+
+% from the Biometrika styleguide 
+\DeclareOption{biometrika}{
+	\renewcommand{\Prsymbol}{pr}
+	\renewcommand{\Prformat}[1]{\operatorname{#1}}
+	\renewcommand{\Prlparen}{(}
+	\renewcommand{\Prrparen}{)}
+
+	\renewcommand{\Exsymbol}{E}
+	\renewcommand{\Exformat}[1]{{#1}}
+	\renewcommand{\Exlparen}{[}
+	\renewcommand{\Exrparen}{]}
+
+	\capitalizevarfalse
+}
+
+\DeclareOption*{%
+	\PackageError{probability}{Unknown option ‘\CurrentOption’}%
+}
+
+\ExecuteOptions{plain}
+\ProcessOptions \relax
+
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+%            Probability operator definitions
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+
+% - Probability symbol: Pr or P or pr
+\providecommand{\Prsymbol}{P}
+% Some alternatives
+%	\providecommand{\Prsymbol}{Pr}
+%	\providecommand{\Prsymbol}{pr}  
+%	\providecommand{\Prsymbol}{\ensuremath{\mathbb{P}}}
+
+% - Formatting of operator: math italic or math roman (mathoperator) or blackboard or sansarif/bold
+\providecommand{\Prformat}[1]{#1}
+% Some alternatives
+%	\providecommand{\Prformat}[1]{\textbf{\textsf{#1}}}
+%	\providecommand{\Pr}{\operatorname{\#1}} % operator version
+
+% - replace TeX builtin for \Pr (= \mathrm Pr) with the formatting we've specified
+\renewcommand{\Pr}{\Prformat{\Prsymbol}} 
+\providecommand{\Prsub}[1]{{\Pr}_{#1}} 
+
+% - Brackets, conditional bar, and sizing
+\providecommand{\Prlparen}{(}
+\providecommand{\Prrparen}{)}
+
+% - Defines the \Prob macros
+\providecommand\given{} % so it exists
+\DeclarePairedDelimiterXPP\Prob[1]{\Pr}{\Prlparen}{\Prrparen}{}{
+	\renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}
+#1
+}
+
+\DeclarePairedDelimiterXPP\Probs[2]{\Prs{#1}}{\Prlparen}{\Prrparen}{}{
+	\renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}
+#2
+}
+
+\providecommand{\Probtext}[1]{\Pr\{ \text{#1}\}}
+
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+%             Expectation symbol definitions
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+
+
+% - Expectation symbol: E or Ex I suppose
+
+\providecommand{\Exsymbol}{E}
+% Some alternatives
+%	\providecommand{\Exsymbol}{Ex}
+
+% - Formatting of operator: math italic or math roman (mathoperator) or blackboard or sansarif/bold
+\providecommand{\Exformat}[1]{#1}
+% Some alternatives
+%	\providecommand{\Exformat}[1]{\ensuremath{\mathbb #1}}
+%	\providecommand{\Exformat}[1]{\ensuremath{\mathcal #1}}
+%	\providecommand{\Exformat}[1]{\textbf{\textsf{#1}}}
+
+\providecommand{\Ex}{\Exformat{\Exsymbol}} 
+\providecommand{\Exsub}[1]{{\Ex}_{#1}} 
+
+% - Brackets, conditional bar, and sizing
+\providecommand{\Exlparen}{[}
+\providecommand{\Exrparen}{]}
+
+\providecommand\given{} % so it exists
+\DeclarePairedDelimiterXPP\Expect[1]{\Ex}{\Exlparen}{\Exrparen}{}{
+	\renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}
+#1
+}
+
+\DeclarePairedDelimiterXPP\Expectsub[2]{\Exsub{#1}}{\Exlparen}{\Exrparen}{}{
+	\renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:\mathopen{}}
+#2
+}
+
+
+
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+%                Other probability symbols
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+
+
+% --- variance / covariance: upper case or lower case?  
+\DeclareMathOperator{\var}{\ifcapitalizevar Var \else var \fi}
+\DeclareMathOperator{\cov}{\ifcapitalizevar Cov \else cov \fi}
+
+
+% --- stochastic independence
+\newcommand{\independent}{\bot \!\!\! \bot}
+
+% The same glyph as above, except that perp is an infix operator like < with better spacing.
+% In my opinion, the spacing is too spread out
+%\newcommand{\independent}[0]{\perp \! \! \! \perp}
+
+% Pollard's definition
+%\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+%\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+
+
+% --- set indicator function
+\providecommand{\1}{\ensuremath{\mathds{1}}} %uses mathds
+\providecommand{\ind}[1]{\1_{#1}}   % indicator function
+\providecommand{\inds}[1]{\1_{\{#1\}}}  % set indicator
+
+
+% --- modes of convergence 
+\providecommand{\eqlaw}{\sim}
+\providecommand{\eqdist}{\eqlaw} %synonym
+\providecommand{\tolaw}{\xrightarrow{w}}
+\providecommand{\todist}{\tolaw} %synonym
+\providecommand{\toprob}{\xrightarrow{\mathrm \Prsymbol}}
+
+
+% --- distributions
+
+\providecommand{\normdist}{\ensuremath{\mathcal N}}  % script N style for normal distribution
+
+% uniform san-sarif style for distribution names
+\providecommand{\distformat}[1]{\ensuremath{\mathsf{#1}}}
+\providecommand{\Normal}{\distformat{Norm}}
+\providecommand{\Poisson}{\distformat{Poisson}}
+\providecommand{\Binomial}{\distformat{Bin}}
+\providecommand{\Unif}{\distformat{Uniform}}
+%\providecommand{\Geometric}{\distributionstyle{Geometric}} 
+% do we need geometric, beta, etc?
+
+
+% --- quadratic variation
+\DeclarePairedDelimiterXPP\quadvar[2]{}{\langle}{\rangle}{_t}{\ensuremath{ {#1},\,{#2}}}
+\DeclarePairedDelimiterXPP\quadcov[1]{}{\langle}{\rangle}{_t}{\ensuremath{ {#1}}}
+
+
+% --- misc
+\DeclareMathOperator{\entropy}{\operatorname{H}}
+\providecommand{\FisherInfo}{\bm{\mathcal I}}
+%\DeclareMathOperator{\kur}{kur}
+
+
+
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+%              Other mathematical notation
+% -----------------------------------------------------------
+% -----------------------------------------------------------
+
+
+% --- Caligraphic letters (for $sigma$-albegras)
+
+\let\Cal=\EuScript  % uses package EuScript
+
+
+% --- Shorthand notations for sets N, Z, R and C
+% In general, use double-stroke characters instead of blackboard bold
+
+\let\realmathbb=\mathbb
+\let\mathbb=\mathds
+
+\providecommand{\RR}{{\mathds{R}}} % Real numbers
+\providecommand{\NN}{{\mathds{N}}} % Natural numbers
+\providecommand{\ZZ}{{\mathds{Z}}} % Integers
+\providecommand{\CC}{{\mathds{C}}} % Complex numbers
+\providecommand{\QQ}{{\mathds{Q}}} % Rational numbers
+\providecommand{\binary}{{\{0,1\}}}
+
+
+% --- Linear algebra, vectors and matricies
+% TODO: bold letters, bold capitals?  arrows?
+% machine learning text like bold vectors, bold capitals for matrices
+
+%\providecommand{\Hessian}{\bm\Cal H}
+\DeclareMathOperator{\tr}{tr} %trace
+\providecommand{\T}{\mathsf{T}}  % for transpose
+% alterative options are \top, T, and \intercal
+
+
+% Landau notation
+\providecommand{\bigO}{\ensuremath{\mathcal{O}}}
+\DeclareMathOperator{\littleO}{o}
+
+% misc operators
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\supp}{supp}
+
+% replace ugly fraktur real / imaginary part operator symbols
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+
+\endinput
+

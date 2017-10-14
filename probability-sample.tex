@@ -1,0 +1,157 @@
+
+\documentclass[11pt,a4paper]{ltxguide}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage[double]{probability}
+
+
+\begin{document}
+
+The \texttt{probability} package is an attempt to synthesize some of the best macros from various sources.  In what follows are clickable links to the sources.  First it uses definitions from the \href{https://www.ctan.org/tex-archive/macros/latex/contrib/proba?lang=en}{\texttt{proba}} macros, from the \href{https://www.ctan.org/pkg/cryptocode}{\texttt{cryptocode}} package and from the \href{https://www.ctan.org/pkg/econometrics}{\texttt{econometrics}} package.  It incorporates Thomas Pollard's \href{http://www.stat.yale.edu/~pollard/Courses/600.spring2017/Handouts/fonts.pdf}{advice} and some of his \href{http://www.stat.yale.edu/~pollard/LaTeX/}{macros} (converted to LaTeX).  \href{https://jblevins.org/log/latex-tips}{Other useful tips} are provided by Jason Blevins, especially on the stochastic independence symbol.  Finally this includes macros defined in the Biometrika \href{https://academic.oup.com/biomet/pages/General_Instructions}{style guide} and the IMS Electronic Journal of Probability \href{http://www.e-publications.org/ims/support/ims-instructions.html}{style guide}.
+
+What style looks best for the probability symbol?
+\[
+  \operatorname{P}(X) \qquad   \operatorname{Pr}[X] \qquad \operatorname{pr}(X) \qquad \operatorname{\mathbb P}[X] \qquad P(X) \qquad \mathbf{\mathsf{Pr}}(X)
+\]
+The following table summarize the styles from a few popular textbooks.
+
+
+\begin{tabular}{l p{1.5cm} p{1.5cm} p{1.5cm} l }
+Source & Probability Symbol & Font Style &  Brace type & Title\\
+\hline
+Williams & P & mathbb & paren & Probability and Martingales\\
+Tao & P & mathbb & paren & Math 275A notes\\
+Durrett & P / p & italic & paren & Probability Theory and Examples\\
+Kallenberg & P & italic & bracket & Foundations of Modern Probability\\
+Biometrika & pr & roman & paren & style guide\\
+Keener & P & italic & paren & Theoretical Statistics\\
+Wainwright & P &  mathbb & paren & Stat210 notes\\
+Pitman & P & italic  & paren & Probabiilty\\
+Bishop & p & italic & paren & Pattern Recognition and Machine Learning\\
+\hline
+\end{tabular}
+
+
+What style looks best for expectation?
+\[
+    \operatorname E(f(X)) \qquad \operatorname{\mathbb E}[f(X)] \qquad \operatorname{\mathcal E}[X\mid Y] \qquad EX
+\]
+
+What follows is a similar summary for expectation.  The final column indicates whether the name of the variance operator is capitalized.
+
+\begin{tabular}{l p{1.5cm} p{1.5cm} p{1.7cm} p{1.5cm} }
+Source & Expectation Symbol&  Font Style & Brace type & Var \\
+\hline
+Williams & E & mathbb &  paren & cap\\
+Tao & E & mathbb & none & no cap \\
+Durrett & E & italic & paren & cap \\
+Kallenberg & E & italic & bracket/none & no cap \\
+Biometrika & E & italic & paren & no cap \\
+Keener & E & italic & bracket & cap \\
+Wainwright & E & mathbb & bracket & ?\\
+Pitman & E & italic & paren & cap\\
+Bishop & E & mathbb & bracket & no cap\\
+\hline
+\end{tabular}
+
+
+The primary macros in this package specify what the formatting choices are for probability and expectation, allowing the user to set the symbols used, the formatting of the symbols, and the braces.  In general all of these style choices will be set by the \verb+\usepackage+ option, but they can be set dynamically within the document as well.  
+
+The package redefines \verb+\Pr+ for usage as the main probability operator, in a way which is consistent with the style settings.  It defines an analogous operator \verb+\Ex+ for the expectation.  The following illustrates the basic usage of the operators.
+
+\[ \Pr( A \mid B ) = \frac{\Pr(A \cap B)}{\Pr(B)} \qquad \Ex_x[ B_t \mid B_T =y ] = \frac t T (y-x) + x
+\]
+
+The package additionally defines \verb+\Prob+ and \verb+\Expect+ using the \verb+\DeclarePairedDelimiter+ function in the \texttt{mathtools} function.  These macros incorporate the prefered braces, allow easy specification of conditional probabilities and expectations, and have starred versions which resize based on the arguments.  There are also variants with subscripts next to the operators.
+
+For example, $\Prob{ X \given Y } = \Prob{X}$ when $X$ is independent of $Y$.  Furthermore $\Expect{X} = \sum_i x_i p_i$.  More examples are given by
+\[
+  \Prob*{ \| X_t \| > \frac 1 2 \given X_0 = 0 }  \qquad \Expectsub*{t}{e^{\int_0^t f(X_u)\,du}}
+\]
+
+Here we demonstrate how to modify the style of the operators within the document
+\begin{itemize}
+  \renewcommand{\Prsymbol}{pr}
+  \renewcommand{\Prformat}[1]{\operatorname{#1}}
+  \renewcommand{\Prlparen}{(}
+  \renewcommand{\Prrparen}{)}
+  
+  \item \emph{Biometrika style}
+  What is the probability $\Prob{\|X\| > \epsilon}$?
+
+  \renewcommand{\Exsymbol}{E}
+  \renewcommand{\Exformat}[1]{{#1}}
+  \renewcommand{\Exlparen}{[}
+  \renewcommand{\Exrparen}{]}
+  \item \emph{Plain style}
+  When $X$ and $Y$ are independent then $\Expect{XY} = \Ex{X} \, \Ex{Y}$
+\end{itemize}
+
+
+Next we move on to other commonly used symbols in probability. Here are some indicator symbols
+\[
+    \1\{X=Y\} \qquad  \ind{A} \qquad \inds{X=Y}
+\]
+
+Equality in law is given by $X\eqlaw Y$. Weak convergence (aka convergence in law, aka convergence in distribution is given by) $X_n\tolaw X$.  Convergence in probability is given by $X_n\toprob X$.  Stochastic independence looks like this $X\independent_\xi Y $.  Variance is $\var{X}$, covariance is $\cov(X,Y)$.  Here is entropy $\entropy(X\mid Y)$ and here is the Fisher information $\FisherInfo$
+
+Caligraphic letters for $\sigma$-algebras are provided by \verb+EuScript+
+\[
+  \begin{split}
+    \Cal A \Cal B \Cal C \Cal D \Cal E \Cal F \Cal G \Cal H \Cal I \Cal J \Cal K \Cal L \Cal M \\
+    \Cal N \Cal O \Cal P \Cal Q \Cal R \Cal S \Cal T \Cal U \Cal V \Cal W \Cal X \Cal Y \Cal Z
+  \end{split}  
+\]
+
+Just like the IMS Electronic Journal of Probability style sheet, we've hijacked \verb+\mathbb+ to show \verb+\mathds+ instead.
+\[
+  \begin{split}
+    \mathbb A \mathbb B \mathbb C \mathbb D \mathbb E \mathbb F \mathbb G \mathbb H \mathbb I \mathbb J \mathbb K \mathbb L \mathbb M \\
+    \mathbb N \mathbb O \mathbb P \mathbb Q \mathbb R \mathbb S \mathbb T \mathbb U \mathbb V \mathbb W \mathbb X \mathbb Y \mathbb Z
+  \end{split}  
+\]
+Here are the originals, which are available on \verb+\realmathbb+
+\[
+  \begin{split}
+    \realmathbb A \realmathbb B \realmathbb C \realmathbb D \realmathbb E \realmathbb F \realmathbb G \realmathbb H \realmathbb I \realmathbb J \realmathbb K \realmathbb L \realmathbb M \\
+    \realmathbb N \realmathbb O \realmathbb P \realmathbb Q \realmathbb R \realmathbb S \realmathbb T \realmathbb U \realmathbb V \realmathbb W \realmathbb X \realmathbb Y \realmathbb Z
+  \end{split}  
+\]
+
+The package provides symbols for standard distributions using san-sarif fonts.  However caligraphic N for the normal distribution is also available.
+\[
+\begin{split}
+	 X\sim \Normal(\mu,\sigma^2) \qquad \qquad X\sim \normdist(\mu,\sigma^2)\qquad \\
+	 X\sim \Poisson(\lambda) \qquad X\sim \Binomial(n,p) \qquad X\sim \Unif(a,b)
+\end{split}
+\]
+
+The rest of the definitions are generally used in mathematics, and are not specific to probability.  They are my commonly used macros, but maybe they do not properly belong to a probability package.
+
+First we define the standard sets.  The binary set is $\binary$.  Natural numbers are $\NN$.  The integers are $\ZZ$.  The rational numbers are $\QQ$.  The real numbers are $\RR$.  The complex numbers are $\CC$.
+
+Landau notation is given by $\bigO(f(x))$ and $\littleO(f(x))$.
+
+The trace of a matrix is $\tr M$, but the transpose of a matrix is $M^\T$.
+
+The support of a function is 
+\[
+  \supp f = \{x \mid f(x)\neq0\}
+\]
+The signum is defined by
+\[  
+    \sgn x = 
+    \begin{cases}
+      +1 & x >0 \\
+      0 & x=0 \\
+      -1 & x<0
+    \end{cases}
+\]
+If $z\in \CC$ and $z=a+bi$ where $a,b\in \RR$ then $\Re z = a$ and $\Im z =b$.
+
+\end{document}
+
