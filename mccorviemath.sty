@@ -24,12 +24,25 @@
 \RequirePackage{amsfonts}
 \RequirePackage{mathtools}
 
+\RequirePackage{euscript}
+\RequirePackage{dsfont}
+
 
 % -----------------------------------------------------------
 % -----------------------------------------------------------
 %              Other mathematical notation
 % -----------------------------------------------------------
 % -----------------------------------------------------------
+
+% --- Caligraphic letters (for $sigma$-albegras)
+
+\let\Cal=\EuScript  % uses package EuScript
+
+% --- Shorthand notations for sets N, Z, R and C
+% In general, use double-stroke characters instead of blackboard bold
+
+\let\realmathbb=\mathbb
+\let\mathbb=\mathds
 
 
 \providecommand{\RR}{{\mathds{R}}} % Real numbers

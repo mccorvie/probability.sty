@@ -22,6 +22,8 @@
 \usepackage[double]{probability}
 \usepackage{mccorviemath}
 
+
+
 \begin{document}
 
 The \texttt{probability} package is an attempt to synthesize some of the best macros from various sources.  In what follows are clickable links to the sources.  First it uses definitions from the \href{https://www.ctan.org/tex-archive/macros/latex/contrib/proba?lang=en}{\texttt{proba}} macros, from the \href{https://www.ctan.org/pkg/cryptocode}{\texttt{cryptocode}} package and from the \href{https://www.ctan.org/pkg/econometrics}{\texttt{econometrics}} package.  It incorporates Thomas Pollard's \href{http://www.stat.yale.edu/~pollard/Courses/600.spring2017/Handouts/fonts.pdf}{advice} and some of his \href{http://www.stat.yale.edu/~pollard/LaTeX/}{macros} (converted to LaTeX).  \href{https://jblevins.org/log/latex-tips}{Other useful tips} are provided by Jason Blevins, especially on the stochastic independence symbol.  Finally this includes macros defined in the Biometrika \href{https://academic.oup.com/biomet/pages/General_Instructions}{style guide} and the IMS Electronic Journal of Probability \href{http://www.e-publications.org/ims/support/ims-instructions.html}{style guide}.
@@ -124,6 +126,16 @@ Caligraphic letters for $\sigma$-algebras are provided by \verb+EuScript+
   \end{split}  
 \]
 
+The package provides symbols for standard distributions using san-sarif fonts.  However caligraphic N for the normal distribution is also available.
+\[
+\begin{split}
+	 X\sim \Normal(\mu,\sigma^2) \qquad \qquad X\sim \normdist(\mu,\sigma^2)\qquad \\
+	 X\sim \Poisson(\lambda) \qquad X\sim \Binomial(n,p) \qquad X\sim \Unif(a,b)
+\end{split}
+\]
+
+The rest of the definitions are generally used in mathematics, and are not specific to probability.  As such they are defined in the \texttt{mccorviemath} package, but they are demonstrated here.
+
 Just like the IMS Electronic Journal of Probability style sheet, we've hijacked \verb+\mathbb+ to show \verb+\mathds+ instead.
 \[
   \begin{split}
@@ -139,15 +151,6 @@ Here are the originals, which are available on \verb+\realmathbb+
   \end{split}  
 \]
 
-The package provides symbols for standard distributions using san-sarif fonts.  However caligraphic N for the normal distribution is also available.
-\[
-\begin{split}
-	 X\sim \Normal(\mu,\sigma^2) \qquad \qquad X\sim \normdist(\mu,\sigma^2)\qquad \\
-	 X\sim \Poisson(\lambda) \qquad X\sim \Binomial(n,p) \qquad X\sim \Unif(a,b)
-\end{split}
-\]
-
-The rest of the definitions are generally used in mathematics, and are not specific to probability.  As such they are defined in the \texttt{mccorviemath} package, but they are demonstrated here.
 
 First we define the standard sets.  The binary set is $\binary$.  Natural numbers are $\NN$.  The integers are $\ZZ$.  The rational numbers are $\QQ$.  The real numbers are $\RR$.  The complex numbers are $\CC$.
 
