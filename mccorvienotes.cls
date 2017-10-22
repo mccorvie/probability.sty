@@ -20,7 +20,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/13]
 \ProvidesClass{mccorvienotes}
-    [2017/10/13 v0.1 first draft pulling together commonly used templates]
+    [2017/10/20 v0.2 bug fixes from actual usage]
 \ClassInfo{mccorvienotes}{Copyright (c) 2017 Ryan McCorvie}
 \RequirePackage{ifthen}
 \RequirePackage[nodayofweek]{datetime}
@@ -35,14 +35,13 @@
 \usvardate
 \newcommand{\mcnotes@lang}{english}
 
-
-\DeclareOption{notes}{%
-  \newcommand{\mcnotes@type}{\CurrentOption}%
+\DeclareOption{notes}{
+  \newcommand{\mcnotes@type}{\CurrentOption}
   \providecommand{\mcnotes@header}{title}
   \providecommand{\mcnotes@theorem}{nosection}
   \providecommand{\mcnotes@columns}{onecolumn}
   \providecommand{\mcnotes@side}{twoside}
-  \PassOptionsToPackage{fleqn}{amsmath}%
+  \PassOptionsToPackage{fleqn}{amsmath}
 }
 
 
@@ -50,10 +49,11 @@
   \PackageWarning{mccorvienotes}{Unknown option ‘\CurrentOption’}%
 }
 
+
 \ProcessOptions \relax
 
 % load the standard article
-\LoadClass[letterpaper,11pt,\mcnotes@side]{article}
+\LoadClass[letterpaper,10pt,\mcnotes@side]{article}
 
 % -----------------------------------------------------------
 % -----------------------------------------------------------
@@ -63,7 +63,7 @@
 
 \RequirePackage{geometry}
 \geometry{letterpaper,portrait,left=3cm,right=3cm,top=3cm,bottom=3cm}
-
+\RequirePackage{setspace} % controls spacing between lines
 
 % --- Internationalization support
 
@@ -98,6 +98,8 @@
 
 % --- Font packages
 \RequirePackage{dsfont}
+%\RequirePackage[T1]{fontenc}
+%\RequirePackage{dejavu}
 \RequirePackage{bera} % Let's try using bera as our default font
 %\RequirePackage{stmaryrd} %St Mary's Road symbol font
 %\RequirePackage{latexsym} % Defines a dozen character symbols (alread in AMS packages)
@@ -152,20 +154,15 @@
 \delimitershortfall=5pt
 
 \frenchspacing
-%\DeclareRobustCommand{\smallcaps}[1]{\scshape{#1}}%\MakeTextLowercase{#1}}
 
-\DeclareRobustCommand{\smallcaps}[1]{\textit{#1}}%\MakeTextLowercase{#1}}
+% bera does not have small caps, so skip it
+% \DeclareRobustCommand{\smallcaps}[1]{\scshape{#1}}%\MakeTextLowercase{#1}}
 
-\newcommand{\mymarginpar}[1]{\marginpar{\setstretch{0.7}\textit{\scriptsize{#1}}}}
-\newcommand{\separator}{\begin{center}\rule{\columnwidth}{\arrayrulewidth}\end{center}}
-\newcommand{\tosay}[1]{\begin{center}\text{\fbox{\scriptsize{#1}}}\end{center}}
-\newcounter{mcnotes@lecture}
-\newcommand{\lecture}[4][]{%
-  \addtocounter{mcnotes@lecture}{1}%
-  \newdate{@datelecture#2#3#4}{#2}{#3}{#4}%
-  \mymarginpar{\mcnotes@lecturename{}\ \arabic{mcnotes@lecture} \ifthenelse{\equal{#1}{}}{}{\ (#1)}\\ \displaydate{@datelecture#2#3#4}}%
-}
-\newcommand{\TODO}{\mymarginpar{TODO}}%
+
+\providecommand{\mymarginpar}[1]{\marginpar{\setstretch{0.7}\textit{\scriptsize{#1}}}}
+\providecommand{\separator}{\begin{center}\rule{\columnwidth}{\arrayrulewidth}\end{center}}
+\providecommand{\tosay}[1]{\begin{center}\text{\fbox{\scriptsize{#1}}}\end{center}}
+\providecommand{\TODO}[1]{\mymarginpar{TODO: #1}}%
 
 
 
@@ -186,10 +183,12 @@
 	{}                        % Indent amount (empty = no indent,
 	                          %        \parindent = para indent)
 	{\bfseries\sffamily}      % Thm head font
-	{.}                       % Punctuation after thm head
+	{}                        % Punctuation after thm head
 	{ }                       % Space after thm head: " " = normal interword space;
 	                          %                       \newline = linebreak
-	{}                        % Thm head spec (can be left empty, meaning `normal')
+  {\thmnumber{#2}. \thmname{#1}~\thmnote{\mdseries \sffamily (#3)}}    % Thm head spec (can be left empty, meaning `normal')
+%  {}                        % Thm head spec (can be left empty, meaning `normal')
+
 \newtheoremstyle{rmstyle} % name % cf. thmtest.tex of AMSLaTeX
 	{3pt}                     % Space above
 	{3pt}                     % Space below
@@ -197,13 +196,17 @@
 	{}                        % Indent amount (empty = no indent,
 	                          %        \parindent = para indent)
 	{\bfseries\sffamily}      % Thm head font
-	{.}                       % Punctuation after thm head
+	{}                        % Punctuation after thm head
 	{ }                       % Space after thm head: " " = normal interword space;
 	                          %                       \newline = linebreak
-	{}                        % Thm head spec (can be left empty, meaning `normal')
+  {\thmnumber{#2}. \thmname{#1}~\thmnote{\mdseries \sffamily (#3):}}    % Thm head spec (can be left empty, meaning `normal')
+%  {}                        % Thm head spec (can be left empty, meaning `normal')
 
 
-\swapnumbers % numbers before theorems
+
+ % {\thmnumber{#2}. \thmname{#1}~\thmnote{\normalfont{(#3)}}}    % Thm head spec (can be left empty, meaning `normal')
+
+%\swapnumbers % numbers before theorems
 \theoremstyle{itstyle}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -221,7 +224,8 @@
 \newtheorem{problem}[theorem]{Problem}
 \newtheorem{notation}[theorem]{Notation}
 
-\numberwithin{equation}{section}
+% notes is designed to be used without numbered sections
+% \numberwithin{equation}{section}
 
 
 %% Itemize and enumerate for bera
@@ -275,12 +279,12 @@
 
   \fancyhf{}
   \ifthenelse{\isundefined{\mcnotes@titleshort}}%
-  	{\fancyhead[LE]{\smallcaps\@title}}%
-  	{\fancyhead[LE]{\smallcaps\mcnotes@titleshort}}%
+  	{\fancyhead[LE]{\itshape \@title}}%
+  	{\fancyhead[LE]{\itshape \mcnotes@titleshort}}%
 	 
-  \fancyhead[RO]{\smallcaps\@author}
+  \fancyhead[RO]{\itshape\@author}
 
-  \fancyfoot[RO,LE]{\smallcaps\thepage}
+  \fancyfoot[RO,LE]{\itshape\thepage}
 
   \renewcommand{\headrulewidth}{0.5pt}
 
